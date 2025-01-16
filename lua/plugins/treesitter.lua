@@ -2,6 +2,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    opts = { ensure_installed = { "rust", "ron" } },
     config = function()
       require("nvim-treesitter.configs").setup({
         highlight = {
