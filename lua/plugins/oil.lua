@@ -1,7 +1,5 @@
 return {
   'stevearc/oil.nvim',
-  ---@module 'oil'
-  ---@type oil.SetupOpts
   dependencies = { { "echasnovski/mini.icons", opts = {} } },
   -- dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
@@ -10,6 +8,9 @@ return {
           keymaps = {
               ["<C-h>"] = false,
               ["<M-h>"] = "actions.select_split",
+          },
+          view_options = {
+              show_hidden = true,
           },
       }
   end,
