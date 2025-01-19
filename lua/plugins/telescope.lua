@@ -1,59 +1,61 @@
 return {
   "nvim-telescope/telescope.nvim",
-  cmd = {"Telescope"},
-  enabled = true,
-
+  event = "VimEnter",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    { -- enable Neovim messages in telescope
+      "nvim-telescope/telescope-ui-select.nvim",
+      config = function()
+        require("telescope").load_extension("ui-select")
+      end,
+    },
+    { -- enable fuzzy finding
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = "make",
+      config = function()
+        require("telescope").load_extension("fzf")
+      end,
+    },
   },
 
-  -- {{{ keymaps
-  keys = function()
-    local cmdT = "<cmd>Telescope "
-    return {
-      {"<leader>fC", cmdT .. "commands<cr>", desc = "Telescope commands" },
-      {"<leader>fF", cmdT .. "media_files<cr>", desc = "Telescope media files" },
-      {"<leader>fM", cmdT .. "man_pages<cr>", desc = "Telescope man pages" },
-      {"<leader>fR", cmdT .. "registers<cr>", desc = "Telescope registers" },
-      {"<leader>fS", cmdT .. "colorscheme<cr>", desc = "Telescope colorschemes" },
+  config = function()
+    local builtin = require("telescope.builtin")
 
-      {"<leader>fb", cmdT .. "buffers<cr>", desc = "Telescope buffers" },
+    vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
+    vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
+    vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search Files" })
+    vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "Search Select Telescope" })
+    vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "Search Word" })
+    vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search Grep" })
+    vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search Diagnostics" })
+    vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "Search Resume" })
+    vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = "Search recent files" })
+    vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Search existing buffers" })
 
-      {"<leader>fc",
-       function()
-         require("telescope.builtin").find_files{
-           cwd = vim.fn.stdpath("config")
-         }
-       end
-      },
+    vim.keymap.set("n", "<leader>/",
+      function()
+        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end,
+      { desc = "Fuzzily search in current buffer" })
 
-      {"<leader>fd", cmdT .. "diagnostics<cr>", desc = "Telescope diagnostics" },
-      {"<leader>ff", cmdT .. "find_files<cr>", desc = "Telescope Find files" },
-      {"<leader>fg", cmdT .. "live_grep<cr>", desc = "Telescope Live Grep" },
-      {"<leader>fh", cmdT .. "help_tags<cr>", desc = "Telecope Help files" },
+    vim.keymap.set("n", "<leader>s/",
+      function()
+        builtin.live_grep {
+          grep_open_files = true,
+          prompt_title = "Live Grep in Open Files",
+        }
+      end,
+      { desc = "Search in opened files" })
 
-      {"<leader>fk", cmdT .. "keymaps<cr>", desc = "Telescope keymaps" },
-      {"<leader>fl", cmdT .. "resume<cr>", desc = "Telescope resume" },
-      {"<leader>fm", cmdT .. "marks<cr>", desc = "Telescope marks" },
-      {"<leader>fo", cmdT .. "oldfiles<cr>", desc = "Telescope old files" },
-
-      {"<leader>fp",
-       function()
-         require("telescope.builtin").find_files{
-           cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
-         }
-       end
-      },
-
-      {"<leader>fw", cmdT .. "grep_string<cr>", desc = "Telescope Find Word" },
-
-      {"<leader>gC", cmdT .. "git_commits<cr>", desc = "Telescope git commits" },
-      {"<leader>gb", cmdT .. "git_branches<cr>", desc = "Telescope git branches" },
-      {"<leader>go", cmdT .. "git_status<cr>", desc = "Telescope git status" },
-
-      {"<leader>LS", cmdT .. "lsp_dynamic_workspace_symbols<cr>", desc = "Telescope Workspace Symbols" },
-      {"<leader>Ls", cmdT .. "lsp_document_symbols<cr>", desc = "Telescope Document Symbols" },
-    }
+    vim.keymap.set("n", "<leader>sc",
+      function()
+        builtin.find_files {
+          cwd = vim.fn.stdpath("config")
+        }
+      end,
+      { desc = "Search neovim config files" })
   end,
 }
