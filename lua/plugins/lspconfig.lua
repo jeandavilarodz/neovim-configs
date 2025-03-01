@@ -5,8 +5,10 @@ return {
 
   opts = {
     servers = {
-      rust_analyzer = {},
       zls = {},
+      bacon_ls = {
+        enabled = true,
+      },
     }
   },
 
