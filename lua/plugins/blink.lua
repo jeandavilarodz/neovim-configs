@@ -29,6 +29,18 @@ return {
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
+
+    completion = {
+      menu = {
+        border = "rounded",
+        draw = {
+          treesitter = { "lsp" },
+        },
+      },
+    },
+
+    fuzzy = { implementation = "prefer_rust_with_warning" },
+
   },
   opts_extend = { "sources.default" }
 }

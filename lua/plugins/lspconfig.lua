@@ -19,7 +19,15 @@ return {
     -- Configure mason
     require('mason').setup()
     require('mason-lspconfig').setup()
-    require('fidget').setup()
+    require('fidget').setup({
+      notification = {
+        window = {
+          winblend = 0,
+          border = 'none',
+          align = 'bottom',
+        }
+      }
+    })
 
     -- Make a list of all LSP servers
     local lsp_servers = {}
